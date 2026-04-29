@@ -1,6 +1,7 @@
 (function() {
     'use strict';
-
+    const VERSION = "v1.0";
+    console.log("年次チェック:", VERSION);
     /********** ① DBTaskForm：詳細自動表示＋検索 **********/
     if (location.href.includes("page=DBTaskForm")) {
 
