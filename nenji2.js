@@ -149,6 +149,16 @@
         // ===== 区分別チェック =====
         const numDays  = parseFloat(reqDays.replace(/[^\d.]/g, "") || "0");
         const numHours = parseFloat(reqHours.replace(/[^\d.]/g, "") || "0");
+        const start = getText(`#record-value-2735-${rid}`);
+        const end   = getText(`#record-value-2736-${rid}`);
+
+        const parse = t => {
+            const m = t.match(/(\d+)時(\d+)分/);
+            return m ? (parseInt(m[1]) * 60 + parseInt(m[2])) : null;
+        };
+
+        const s = parse(start);
+        const e = parse(end);
 
         if (isDay || isAM || isPM) {
             results.push(
@@ -157,7 +167,58 @@
                     : `日/半日：NG（日数=${reqDays} 時間=${reqHours})`
             );
         }
+        if (isDay) {
+            results.push(
+                numDays > 1 && numHours === 0
+                    ? "請求日数_日：OK"
+                    : `請求日数_日：NG（日数=${reqDays} 時間=${reqHours})`
+            );
+            if (s !== null && e !== null) {
+                const diff = (e - s) / 60;
 
+                results.push(
+                    Math.abs(diff - 8.75) < 0.01
+                        ? `請求時間_日単位：OK（開始=${start} / 終了=${end} / 差=${diff}h / 請求=${reqDays}）`
+                        : `請求時間_日単位：NG（開始=${start} / 終了=${end} / 差=${diff}h / 請求=${reqDays}）`
+                );
+            } else {
+                results.push("日単位：NG（時間取得不可）");
+            }
+        }
+        if (isAM || isPM) {
+            results.push(
+                numDays === 0.5 && numHours === 0
+                    ? "請求日数_半日：OK"
+                    : `請求日数_半日：NG（日数=${reqDays} 時間=${reqHours})`
+            );
+            if (s !== null && e !== null) {
+                const diff = (e - s) / 60;
+                if (isAM) {
+                    if(end==="12時00分"){
+                        results.push(
+                            Math.abs(diff - 3) < 0.01 || (diff - 3.5) < 0.01 || (diff - 4) < 0.01
+                            ? `請求時間_半日単位：OK（開始=${start} / 終了=${end} / 差=${diff}h / 請求=${reqDays}）`
+                            : `請求時間_半日単位：NG（開始=${start} / 終了=${end} / 差=${diff}h / 請求=${reqDays}）`
+                        );
+                    } else {
+                        results.push(`請求時間_半日単位：NG　終了=${end}　半日単位午前は終了時間12:00）`);
+                    }
+                }
+                if (isPM) {
+                    if(start==="13時00分"){
+                        results.push(
+                            Math.abs(diff - 3.75) < 0.01 || (diff - 4.25) < 0.01 || (diff - 4.75) < 0.01
+                            ? `請求時間_半日単位：OK（開始=${start} / 終了=${end} / 差=${diff}h / 請求=${reqDays}）`
+                            : `請求時間_半日単位：NG（開始=${start} / 終了=${end} / 差=${diff}h / 請求=${reqDays}）`
+                        );
+                    } else {
+                        results.push(`請求時間_半日単位：NG　開始=${start}　半日単位午後は開始時間13:00）`);
+                    }
+                }
+            } else {
+                results.push("半日単位：NG（時間取得不可）");
+            }
+        }
         if (is3h) {
             // ===== 請求日数チェック（3時間以内） =====
             if (numDays > 0) {
@@ -165,24 +226,13 @@
             } else {
                 results.push("請求日数：OK（3時間以内）");
             }
-            const start = getText(`#record-value-2735-${rid}`);
-            const end   = getText(`#record-value-2736-${rid}`);
-
-            const parse = t => {
-                const m = t.match(/(\d+)時(\d+)分/);
-                return m ? (parseInt(m[1]) * 60 + parseInt(m[2])) : null;
-            };
-
-            const s = parse(start);
-            const e = parse(end);
 
             if (s !== null && e !== null) {
                 const diff = (e - s) / 60;
-
                 results.push(
                     Math.abs(diff - numHours) < 0.01
-                        ? `3時間以内：OK（開始=${start} / 終了=${end} / 差=${diff}h / 請求=${reqHours}）`
-                        : `3時間以内：NG（開始=${start} / 終了=${end} / 差=${diff}h / 請求=${reqHours}）`
+                    ? `請求時間_3時間以内：OK（開始=${start} / 終了=${end} / 差=${diff}h / 請求=${reqHours}）`
+                    : `請求時間_3時間以内：NG（開始=${start} / 終了=${end} / 差=${diff}h / 請求=${reqHours}）`
                 );
             } else {
                 results.push("3時間以内：NG（時間取得不可）");
