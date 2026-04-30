@@ -4,6 +4,6 @@
 // @match        https://midorinet-iwate.cybozu.com/o/ag.cgi?page=DBRecord&did=35*
 // @match        https://midorinet-iwate.cybozu.com/o/ag.cgi?Page=DBSearchResult&DID=35*
 // @run-at       document-end
-// @require      https://raw.githubusercontent.com/midoriI2026/nenji2/main/nenji2.js?v=1.0
+// @require      https://raw.githubusercontent.com/midoriI2026/nenji2/main/nenji2.js?v=1.1
 // @grant        none
 // ==/UserScript==
