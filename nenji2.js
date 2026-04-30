@@ -1,7 +1,8 @@
 (function() {
-    const VERSION = "v1.0";
-    console.log("年次チェック:", VERSION);
+    const VERSION = "v1.1";
+    console.log("年次チェック2:", VERSION);
     'use strict';
+
     /********** ① DBTaskForm：詳細自動表示＋検索 **********/
     if (location.href.includes("page=DBTaskForm")) {
 
@@ -169,7 +170,7 @@
         }
         if (isDay) {
             results.push(
-                numDays > 1 && numHours === 0
+                numDays >= 1 && numHours === 0
                     ? "請求日数_日：OK"
                     : `請求日数_日：NG（日数=${reqDays} 時間=${reqHours})`
             );
