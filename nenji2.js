@@ -206,7 +206,7 @@ function hasImg(s){return document.querySelector(s+" img")!==null;}
 function styleBtn(b,t){b.style=`position:fixed;top:${t};right:20px;z-index:9999;padding:10px;background:#0078D4;color:#fff;`;}
 function showPanel(r,id){
     const p=document.createElement("div");
-    p.style=`position:fixed;top:80px;right:20px;background:#fff;border:2px solid #333;padding:12px;z-index:999999;width:650px;height:250px;overflow:auto;`;
+    p.style=`position:fixed;top:80px;right:20px;background:#fff;border:2px solid #333;padding:12px;z-index:999999;width:650px;height:200px;overflow:auto;`;
     r.forEach(x=>{
         const d=document.createElement("div");
         d.textContent=x;
